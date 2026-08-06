@@ -83,7 +83,7 @@
       opacity: 0;
     }
     .collapse-panel.open {
-      max-height: 400px;
+      max-height: 500px;
       opacity: 1;
     }
   </style>
@@ -272,9 +272,9 @@
             <div class="w-12 h-12 rounded-xl bg-orchard-100 text-orchard-600 flex items-center justify-center mb-6 text-2xl">
               🤝
             </div>
-            <h3 class="text-lg font-bold text-slate-900 mb-3">在地溫馨自取</h3>
+            <h3 class="text-lg font-bold text-slate-900 mb-3">多元配送管道</h3>
             <p class="text-slate-600 text-sm leading-relaxed font-light">
-              下單後我們會根據釋迦採收熟度，第一時間與您聯繫。約定在永康學校或歸仁自家自取，確保釋迦在最新鮮、狀態最好的時候交到您手上。
+              支援歸仁住家、永康學校面交自取，台南鄰近區滿額親送；考量外縣市買家需求亦特別提供常溫宅配寄送服務，貼心又便利。
             </p>
           </div>
 
@@ -297,13 +297,14 @@
             <div class="flex gap-4">
               <span class="flex-shrink-0 text-xl">📍</span>
               <div>
-                <h4 class="font-bold text-slate-900 mb-1">自取地點說明</h4>
+                <h4 class="font-bold text-slate-900 mb-1">自取與寄送地點說明</h4>
                 <p class="font-light">
-                  本活動為鄰里義賣，非專業電商，以<strong>自取為主</strong>：
+                  本活動為鄰里義賣，非專業電商，取貨方案如下：
                 </p>
                 <ul class="list-disc list-inside mt-2 pl-2 space-y-1 text-slate-600 font-light">
                   <li><strong>歸仁區住家</strong>（近歸仁市區，詳細地址於下單後 LINE 告知）</li>
                   <li><strong>永康區學校</strong>（台南大學附中附近，自取時間另約）</li>
+                  <li><strong>外縣市寄送</strong>（宅配寄送，因釋迦易損耗，下單前請詳閱下方警語說明）</li>
                 </ul>
               </div>
             </div>
@@ -313,7 +314,10 @@
               <div>
                 <h4 class="font-bold text-slate-900 mb-1">外送與外縣市配送限制</h4>
                 <p class="font-light text-slate-600">
-                  若您在台南市鄰近區域且單次<strong>訂購滿 3 箱以上</strong>，我們可以親送至府上。外縣市買家由於大目釋迦運送極易因為碰撞而提前熟軟、損耗，除非您非常理解並極想幫忙老農，否則較不建議下單喔！
+                  若您在台南市鄰近區域且單次<strong>訂購滿 3 箱以上</strong>，我們可以親送至府上。
+                </p>
+                <p class="text-rose-600 font-medium mt-1">
+                  🚨 【特別警語】外縣市買家由於大目釋迦運送極易因為路途震動碰撞而提前熟軟、損耗，除非您非常理解並極想幫忙老農，否則較不建議下單郵寄喔！
                 </p>
               </div>
             </div>
@@ -446,7 +450,7 @@
               </label>
               <div class="space-y-3">
                 <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
-                  <input type="radio" name="pickup-method" value="歸仁住家自取" checked required onclick="validatePickupRule()"
+                  <input type="radio" name="pickup-method" value="歸仁住家自取" checked required onclick="toggleMailingPanel(false); validatePickupRule()"
                     class="mt-1 h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
                   <div>
                     <span class="font-bold text-slate-800 text-sm md:text-base">我家自取（台南歸仁）</span>
@@ -455,7 +459,7 @@
                 </label>
 
                 <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
-                  <input type="radio" name="pickup-method" value="永康學校自取" onclick="validatePickupRule()"
+                  <input type="radio" name="pickup-method" value="永康學校自取" onclick="toggleMailingPanel(false); validatePickupRule()"
                     class="mt-1 h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
                   <div>
                     <span class="font-bold text-slate-800 text-sm md:text-base">學校自取（台南永康）</span>
@@ -464,14 +468,43 @@
                 </label>
 
                 <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
-                  <input type="radio" name="pickup-method" value="滿3箱親送(限台南鄰近區域)" onclick="validatePickupRule()"
+                  <input type="radio" name="pickup-method" value="滿3箱親送(限台南鄰近區域)" onclick="toggleMailingPanel(false); validatePickupRule()"
                     class="mt-1 h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
                   <div>
                     <span class="font-bold text-slate-800 text-sm md:text-base">滿 3 箱以上親送（限台南鄰近區域）</span>
                     <p class="text-xs text-slate-500 mt-0.5">僅提供給單次訂購 3 箱以上，且送貨地為台南市區及鄰近區域之買家。</p>
                   </div>
                 </label>
+
+                <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+                  <input type="radio" name="pickup-method" value="外縣市寄送" onclick="toggleMailingPanel(true); validatePickupRule()"
+                    class="mt-1 h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
+                  <div>
+                    <span class="font-bold text-slate-800 text-sm md:text-base">外縣市寄送（常溫宅配，運費另計）</span>
+                    <p class="text-xs text-rose-600 mt-0.5 font-medium">⚠️ 外縣市買家由於大目釋迦運送極易因為碰撞而提前熟軟、損耗，除非您非常理解並極想幫忙老農，否則較不建議下單喔！</p>
+                  </div>
+                </label>
               </div>
+
+              <!-- Mailing details sub-panel (Collapsible) -->
+              <div id="mailing-panel" class="collapse-panel rounded-2xl bg-orchard-50/70 border border-orchard-200 p-5 mt-3 space-y-4">
+                <h4 class="font-bold text-base text-orchard-900 mb-1">📦 收件人郵寄資訊：</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label for="shipping-name" class="block text-slate-700 font-bold mb-1 text-sm">收件人姓名 <span class="text-rose-500">*</span></label>
+                    <input type="text" id="shipping-name" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orchard-500" placeholder="請輸入收件人姓名">
+                  </div>
+                  <div>
+                    <label for="shipping-phone" class="block text-slate-700 font-bold mb-1 text-sm">收件人電話 <span class="text-rose-500">*</span></label>
+                    <input type="tel" id="shipping-phone" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orchard-500" placeholder="請輸入收件人聯絡電話">
+                  </div>
+                </div>
+                <div>
+                  <label for="shipping-address" class="block text-slate-700 font-bold mb-1 text-sm">收件郵寄地址 <span class="text-rose-500">*</span></label>
+                  <input type="text" id="shipping-address" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-orchard-500" placeholder="請輸入完整收件地址（含縣市地區）">
+                </div>
+              </div>
+
               <p id="pickup-warning" class="hidden text-rose-600 text-sm mt-2 font-medium">⚠️ 親送需滿 3 箱以上喔！請增加箱數或更改為自取。</p>
             </div>
 
@@ -602,6 +635,14 @@
           <span class="text-amber-800 font-medium">轉帳帳號後五碼</span>
           <span class="font-bold text-amber-900" id="m-last5"></span>
         </div>
+        <div id="m-shipping-row" class="hidden flex flex-col border-b border-slate-50 pb-2 bg-orchard-50/50 p-2.5 rounded-lg text-sm">
+          <span class="text-orchard-800 font-bold">📦 郵寄配送資訊</span>
+          <div class="text-xs text-slate-600 mt-1 space-y-1">
+            <p>收件人姓名：<span id="m-ship-name" class="font-semibold text-slate-800"></span></p>
+            <p>收件人電話：<span id="m-ship-phone" class="font-semibold text-slate-800"></span></p>
+            <p>郵寄地址：<span id="m-ship-address" class="font-semibold text-slate-800"></span></p>
+          </div>
+        </div>
         <div class="flex flex-col border-b border-slate-50 pb-2">
           <span class="text-slate-400 mb-1">備註說明</span>
           <p class="text-slate-600 text-xs italic bg-slate-50 p-2.5 rounded-lg break-words" id="m-remarks">無</p>
@@ -688,7 +729,7 @@
     <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
       <div>
         <h3 class="text-xl font-bold text-slate-900 flex items-center gap-1.5">
-          📊 預購訂單管理後台
+          📊 預購訂單 management 後台
           <span id="admin-badge-type" class="text-xs px-2 py-0.5 rounded-full font-medium">--</span>
         </h3>
         <p class="text-xs text-slate-500 mt-0.5" id="admin-panel-sub-desc">已成功連線雲端資料庫，即時對帳中。</p>
@@ -841,6 +882,12 @@
     const bankLast5Input = document.getElementById('bank-last5');
     const pickupWarning = document.getElementById('pickup-warning');
     const timeWarning = document.getElementById('time-warning');
+
+    // Mailing DOM Elements
+    const mailingPanel = document.getElementById('mailing-panel');
+    const shippingNameInput = document.getElementById('shipping-name');
+    const shippingPhoneInput = document.getElementById('shipping-phone');
+    const shippingAddressInput = document.getElementById('shipping-address');
 
     // Init Page Logic
     window.addEventListener('DOMContentLoaded', () => {
@@ -1061,6 +1108,23 @@
       }
     }
 
+    function toggleMailingPanel(show) {
+      if (show) {
+        mailingPanel.classList.add('open');
+        shippingNameInput.required = true;
+        shippingPhoneInput.required = true;
+        shippingAddressInput.required = true;
+      } else {
+        mailingPanel.classList.remove('open');
+        shippingNameInput.required = false;
+        shippingPhoneInput.required = false;
+        shippingAddressInput.required = false;
+        shippingNameInput.value = "";
+        shippingPhoneInput.value = "";
+        shippingAddressInput.value = "";
+      }
+    }
+
     // Form validation and modal opening
     function handleFormSubmit() {
       const isPickupValid = validatePickupRule();
@@ -1068,6 +1132,27 @@
       if (!isPickupValid || !isTimeValid) {
         document.getElementById('order-form-section').scrollIntoView({ behavior: 'smooth' });
         return;
+      }
+
+      // Check pickup method
+      const pickupMethods = document.getElementsByName('pickup-method');
+      let pickup = "";
+      for (const rad of pickupMethods) {
+        if (rad.checked) { pickup = rad.value; break; }
+      }
+
+      // Validation for mailing fields
+      if (pickup === "外縣市寄送") {
+        const sName = shippingNameInput.value.trim();
+        const sPhone = shippingPhoneInput.value.trim();
+        const sAddr = shippingAddressInput.value.trim();
+        if (!sName || !sPhone || !sAddr) {
+          alert("⚠️ 請填寫完整的收件人姓名、電話及郵寄地址！");
+          if (!sName) shippingNameInput.focus();
+          else if (!sPhone) shippingPhoneInput.focus();
+          else shippingAddressInput.focus();
+          return;
+        }
       }
 
       // Check current live stock once more (only if Firebase is active)
@@ -1153,6 +1238,16 @@
       } else {
         document.getElementById('m-bank-row').classList.add('hidden');
       }
+
+      // Handle mailing show/hide in modal
+      if (pickup === "外縣市寄送") {
+        document.getElementById('m-shipping-row').classList.remove('hidden');
+        document.getElementById('m-ship-name').textContent = shippingNameInput.value.trim();
+        document.getElementById('m-ship-phone').textContent = shippingPhoneInput.value.trim();
+        document.getElementById('m-ship-address').textContent = shippingAddressInput.value.trim();
+      } else {
+        document.getElementById('m-shipping-row').classList.add('hidden');
+      }
       
       document.getElementById('m-remarks').textContent = remarks;
       document.getElementById('m-total').textContent = `NT$ ${totalAmount.toLocaleString()} 元`;
@@ -1186,6 +1281,10 @@
       const last5 = document.getElementById('m-last5').textContent;
       const remarks = document.getElementById('m-remarks').textContent;
 
+      const shipName = pickup === "外縣市寄送" ? document.getElementById('m-ship-name').textContent : "";
+      const shipPhone = pickup === "外縣市寄送" ? document.getElementById('m-ship-phone').textContent : "";
+      const shipAddress = pickup === "外縣市寄送" ? document.getElementById('m-ship-address').textContent : "";
+
       const orderObj = {
         name,
         phone,
@@ -1198,7 +1297,10 @@
         last5,
         remarks,
         time: timeStr,
-        status: "待處理" // 初始訂單狀態
+        status: "待處理", // 初始訂單狀態
+        shippingName: shipName,
+        shippingPhone: shipPhone,
+        shippingAddress: shipAddress
       };
 
       const modalSubmitBtn = document.getElementById('modal-submit-btn');
@@ -1284,6 +1386,7 @@
       selectedQuantity = 1;
       orderQtyInput.value = 1;
       toggleTransferPanel(false);
+      toggleMailingPanel(false);
       updateSubtotal();
       
       document.getElementById('successModal').classList.add('hidden');
@@ -1451,6 +1554,17 @@
         if (currentStatus === "已完成") statusBadgeClass = "bg-emerald-100 text-emerald-800";
         if (currentStatus === "已取消") statusBadgeClass = "bg-rose-100 text-rose-800";
 
+        // Generate Pickup Display with Recipient details if mailing is selected
+        let pickupDisplayHTML = `<div>${escapeHtml(ord.pickup)}</div>`;
+        if (ord.pickup === "外縣市寄送" && ord.shippingAddress) {
+          pickupDisplayHTML += `
+            <div class="mt-1 text-[10px] text-orchard-850 bg-orchard-50/80 p-1.5 rounded border border-orchard-100/50 font-normal">
+              <strong>收件:</strong> ${escapeHtml(ord.shippingName)} (${escapeHtml(ord.shippingPhone)})<br>
+              <strong>地址:</strong> ${escapeHtml(ord.shippingAddress)}
+            </div>
+          `;
+        }
+
         tr.innerHTML = `
           <td class="p-3">
             <div class="font-bold text-slate-800">${escapeHtml(ord.name)}</div>
@@ -1462,7 +1576,7 @@
             <div class="text-slate-600">NT$ ${ord.total.toLocaleString()}</div>
           </td>
           <td class="p-3">
-            <div class="font-medium text-slate-700">${escapeHtml(ord.pickup)}</div>
+            <div class="font-medium text-slate-700">${pickupDisplayHTML}</div>
             <div class="text-slate-500 italic">${escapeHtml(ord.times)}</div>
           </td>
           <td class="p-3 space-y-1">
@@ -1472,7 +1586,7 @@
               <select onchange="updateOrderStatus('${ord.id}', this.value)" 
                 class="px-1.5 py-0.5 text-[10px] rounded border border-slate-200 bg-white font-medium focus:outline-none cursor-pointer">
                 <option value="待處理" ${currentStatus==='待處理'?'selected':''}>待處理</option>
-                <option value="已聯絡" ${currentStatus==='聯絡中'?'selected':'' || currentStatus==='已聯絡'?'selected':''}>已聯絡</option>
+                <option value="已聯絡" ${currentStatus==='已聯絡'?'selected':''}>已聯絡</option>
                 <option value="已完成" ${currentStatus==='已完成'?'selected':''}>已完成</option>
                 <option value="已取消" ${currentStatus==='已取消'?'selected':''}>已取消</option>
               </select>
@@ -1578,7 +1692,7 @@
       }
 
       let csvContent = "\uFEFF"; // Add BOM
-      csvContent += "訂單ID,下單時間,狀態,訂購人姓名,聯絡電話,LINE ID,訂購數量,總金額,取貨方式,取貨時段,付款方式,帳號後五碼,備註說明\n";
+      csvContent += "訂單ID,下單時間,狀態,訂購人姓名,聯絡電話,LINE ID,訂購數量,總金額,取貨方式,取貨時段,付款方式,帳號後五碼,備註說明,收件人姓名,收件人電話,收件郵寄地址\n";
 
       ordersList.forEach(ord => {
         const row = [
@@ -1594,7 +1708,10 @@
           `"${ord.times.replace(/"/g, '""')}"`,
           `"${ord.payment.replace(/"/g, '""')}"`,
           `"${ord.last5 || ''}"`,
-          `"${ord.remarks.replace(/"/g, '""')}"`
+          `"${ord.remarks.replace(/"/g, '""')}"`,
+          `"${ord.shippingName ? ord.shippingName.replace(/"/g, '""') : ''}"`,
+          `"${ord.shippingPhone || ''}"`,
+          `"${ord.shippingAddress ? ord.shippingAddress.replace(/"/g, '""') : ''}"`
         ];
         csvContent += row.join(",") + "\n";
       });
@@ -1613,7 +1730,9 @@
       document.body.removeChild(link);
     }
 
+    // Helper HTML escaper to prevent XSS
     function escapeHtml(str) {
+      if (!str) return '';
       return str
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
