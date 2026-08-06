@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>【愛心助農】鄰居老農自家栽種頂級大目釋迦預購 | 產地直送 ‧ 溫馨義賣</title>
+  <meta name="description" content="協助年事已高、無力行銷的老農夫婦義賣大目釋迦。產地直送、手工採收、限量預購。一箱 14 顆約 9 斤只要 650 元，請一起支持在地小農！">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans TC (traditional Chinese) & Quicksand (friendly rounded digits) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Firebase Compat SDKs (V10) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+  <!-- Custom Font configuration & styling -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            orchard: {
+              50: '#f3f7f4',
+              100: '#e3ece4',
+              200: '#cae0cd',
+              300: '#a3caa7',
+              400: '#76ab7b',
+              500: '#548d59',
+              600: '#407144',
+              700: '#345c38',
+              800: '#2c4a2f',
+              900: '#253e28',
+              950: '#112213',
+            },
+            warmSun: {
+              50: '#fffcf5',
+              100: '#fef5e1',
+              200: '#fde6b8',
+              300: '#fbce82',
+              400: '#f9ac4a',
+              500: '#f68e22',
+              600: '#d96c14',
+              700: '#b44f12',
+              800: '#8f3e13',
+              900: '#763412',
+            }
+          },
+          fontFamily: {
+            sans: ['Noto Sans TC', 'Quicksand', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans TC', 'Quicksand', sans-serif;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(84, 141, 89, 0.4);
+      }
+      50% {
+        box-shadow: 0 0 0 10px rgba(84, 141, 89, 0);
+      }
+    }
+    .pulse-glow {
+      animation: pulseGlow 2s infinite;
+    }
+    .collapse-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+      opacity: 0;
+    }
+    .collapse-panel.open {
+      max-height: 400px;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="bg-orchard-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Floating Offline Demo Mode Badge -->
+  <div id="offline-badge" class="hidden fixed top-24 left-4 z-40 bg-amber-500/90 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm border border-amber-400 flex items-center gap-1.5 animate-pulse">
+    <span>⚙️ 離線測試模式 (未設定 Firebase)</span>
+  </div>
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-orchard-800 to-orchard-700 text-white text-center py-2.5 px-4 text-sm font-medium z-30 relative shadow-sm">
+    <div class="max-w-6xl mx-auto flex items-center justify-center gap-2">
+      <span class="flex h-2 w-2 relative">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-warmSun-300 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-warmSun-400"></span>
+      </span>
+      <span>📣 【限量 60 箱】台南歸仁老農大目釋迦開放預購，請大家一起吃甜果支持愛心！</span>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <main class="flex-grow">
+
+    <!-- Hero Header -->
+    <header class="relative bg-orchard-900 text-white overflow-hidden min-h-[85vh] flex items-center">
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0 z-0">
+        <img src="hero_orchard.jpg" alt="老農民在果園中採收釋迦" class="w-full h-full object-cover object-center opacity-50">
+        <div class="absolute inset-0 bg-gradient-to-t from-orchard-950 via-orchard-900/85 to-transparent"></div>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-6 py-20 relative z-10 text-center">
+        <!-- Badge -->
+        <span class="inline-block bg-warmSun-100 text-warmSun-800 font-bold px-4 py-1.5 rounded-full text-sm md:text-base mb-6 shadow-sm border border-warmSun-200">
+          🌾 產地直送 ‧ 手工採收 ‧ 限量預購
+        </span>
+        
+        <h1 class="text-3xl md:text-5xl lg:text-6xl font-black leading-tight tracking-wide mb-6">
+          【愛心助農】<br class="md:hidden">鄰居老農自家栽種<br>
+          <span class="text-warmSun-300 relative inline-block">
+            頂級大目釋迦
+            <span class="absolute bottom-1 left-0 w-full h-2 bg-warmSun-500/30 rounded-full"></span>
+          </span>
+          預購
+        </h1>
+        
+        <p class="text-lg md:text-xl text-orchard-100 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+          一箱箱沉甸甸的釋迦，是老爺爺與老奶奶一整年辛勤的結晶。今年老人家年事更高了，完全無力行銷。邀請您一同支持，吃好果、獻愛心！
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <a href="#order-form-section" class="w-full sm:w-auto px-8 py-4 bg-warmSun-500 hover:bg-warmSun-600 active:scale-95 transition-all text-white text-lg font-bold rounded-2xl shadow-lg hover:shadow-warmSun-500/30 pulse-glow flex items-center justify-center gap-2">
+            ✍️ 立即登記預購
+          </a>
+          <a href="#story-section" class="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-white text-lg font-medium rounded-2xl border border-white/20 backdrop-blur-sm flex items-center justify-center gap-2">
+            👨‍🌾 看看老農故事
+          </a>
+        </div>
+
+        <!-- Stock Tag -->
+        <div class="mt-8 text-sm md:text-base text-orchard-200/90 flex items-center justify-center gap-4">
+          <span>📦 總限量：60 箱</span>
+          <span class="h-4 w-px bg-orchard-700"></span>
+          <span>💰 義賣特價：$650 / 箱</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Warm Story & Specs Section -->
+    <section id="story-section" class="py-16 md:py-24 bg-white">
+      <div class="max-w-6xl mx-auto px-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          <!-- Column 1: Story Text -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="inline-flex items-center gap-2 text-orchard-600 font-bold text-sm tracking-widest uppercase">
+              <span class="w-8 h-0.5 bg-orchard-500"></span> 關於這次義賣
+            </div>
+            
+            <h2 class="text-2xl md:text-4xl font-bold text-slate-900 leading-tight">
+              「老奶奶一雙長滿繭的手，<br class="hidden md:inline">默默守護著這片甜美的釋迦園。」
+            </h2>
+            
+            <div class="text-slate-600 leading-relaxed space-y-4 text-base md:text-lg font-light">
+              <p>
+                去年，在各位熱心街坊鄰居的幫忙下，我們順利幫老農民售出了所有的釋迦，讓兩位老人家鬆了一口氣。
+              </p>
+              <p class="font-normal text-slate-800">
+                然而今年，老爺爺的身體大不如前，已經無力下田。目前果園的套袋、除草到採收，幾乎全靠老奶奶一人默默支撐。釋迦收成期短，兩位老人家一輩子只懂務農，完全沒有心力，也根本不知道該如何上網行銷...
+              </p>
+              <p>
+                不忍心看到兩位老人家一整年的心血付諸流水，我們今年再次發起鄰里義賣預購。果實皆由老奶奶親自挑選、手工採收包裝。
+              </p>
+              <p class="text-orchard-700 font-medium">
+                「一箱 14 顆，重量約 9 斤，義賣分享價只要 $650 元（低於市價行情）。」
+              </p>
+              <p>
+                不論是買回家和家人分享、分送左鄰右舍，或是當作精美禮盒送人，都非常大方好看。期待大家一起幫忙吃好果，傳遞溫暖！
+              </p>
+            </div>
+          </div>
+
+          <!-- Column 2: Product Card -->
+          <div class="lg:col-span-5">
+            <div class="bg-orchard-50 rounded-3xl p-6 shadow-xl border border-orchard-100/50 hover:shadow-2xl transition-all duration-300">
+              <div class="relative rounded-2xl overflow-hidden mb-6 aspect-[4/3] shadow-md">
+                <img src="product_detail.jpg" alt="精美盒裝大目釋迦" class="w-full h-full object-cover">
+                <span class="absolute top-4 right-4 bg-warmSun-500 text-white font-bold px-3 py-1 rounded-lg text-sm shadow">
+                  義賣價 $650/箱
+                </span>
+              </div>
+              
+              <h3 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                📦 預購產品規格明細
+              </h3>
+              
+              <ul class="space-y-3 text-slate-700 text-sm md:text-base">
+                <li class="flex justify-between py-2 border-b border-orchard-100">
+                  <span class="text-slate-500">產品名稱</span>
+                  <span class="font-semibold text-slate-900">頂級大目釋迦禮盒</span>
+                </li>
+                <li class="flex justify-between py-2 border-b border-orchard-100">
+                  <span class="text-slate-500">每箱規格</span>
+                  <span class="font-semibold text-slate-900">14 顆裝</span>
+                </li>
+                <li class="flex justify-between py-2 border-b border-orchard-100">
+                  <span class="text-slate-500">整箱重量</span>
+                  <span class="font-semibold text-slate-900">約 9 斤（含精美手提禮盒包裝）</span>
+                </li>
+                <li class="flex justify-between py-2 border-b border-orchard-100">
+                  <span class="text-slate-500">栽種方式</span>
+                  <span class="font-semibold text-slate-900 text-orchard-600">自家溫室/無過度施藥</span>
+                </li>
+                <li class="flex justify-between py-2">
+                  <span class="text-slate-500">出貨時間</span>
+                  <span class="font-semibold text-warmSun-700">依採收熟度，另行約定取貨</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Product Features Cards -->
+    <section class="py-16 bg-orchard-50 border-t border-b border-orchard-100/50">
+      <div class="max-w-6xl mx-auto px-6">
+        
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-4">我們堅持的在地品質</h2>
+          <p class="text-slate-500 font-light">為了讓您吃得安心，老農奶奶在管理與採收時比誰都更加用心。</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          <!-- Feature 1 -->
+          <div class="bg-white rounded-2xl p-8 shadow-md border border-slate-100 hover:-translate-y-1 transition-all duration-300">
+            <div class="w-12 h-12 rounded-xl bg-orchard-100 text-orchard-600 flex items-center justify-center mb-6 text-2xl">
+              🌿
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-3">溫室安全栽種</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-light">
+              採用溫室防蟲栽培，拒絕過度化學施肥與強效農藥，保證每一顆釋迦都是天然成熟、新鮮現採的健康美味。
+            </p>
+          </div>
+
+          <!-- Feature 2 -->
+          <div class="bg-white rounded-2xl p-8 shadow-md border border-slate-100 hover:-translate-y-1 transition-all duration-300">
+            <div class="w-12 h-12 rounded-xl bg-warmSun-100 text-warmSun-600 flex items-center justify-center mb-6 text-2xl">
+              🎁
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-3">份量誠意十足</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-light">
+              每箱包含 14 顆渾圓飽滿的釋迦，實重約達 9 斤！搭配喜氣的手提禮盒包裝，自用大方，當作伴手禮送人更顯誠意。
+            </p>
+          </div>
+
+          <!-- Feature 3 -->
+          <div class="bg-white rounded-2xl p-8 shadow-md border border-slate-100 hover:-translate-y-1 transition-all duration-300">
+            <div class="w-12 h-12 rounded-xl bg-orchard-100 text-orchard-600 flex items-center justify-center mb-6 text-2xl">
+              🤝
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-3">在地溫馨自取</h3>
+            <p class="text-slate-600 text-sm leading-relaxed font-light">
+              下單後我們會根據釋迦採收熟度，第一時間與您聯繫。約定在永康學校或歸仁自家自取，確保釋迦在最新鮮、狀態最好的時候交到您手上。
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Important Notice Section -->
+    <section class="py-16 bg-white">
+      <div class="max-w-4xl mx-auto px-6">
+        
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50/30 rounded-3xl p-8 border-2 border-amber-200 shadow-md">
+          <h2 class="text-xl md:text-2xl font-bold text-amber-900 mb-6 flex items-center gap-2">
+            ⚠️ 訂購與自取注意事項（請務必閱讀）
+          </h2>
+          
+          <div class="space-y-6 text-slate-700 text-sm md:text-base leading-relaxed">
+            
+            <div class="flex gap-4">
+              <span class="flex-shrink-0 text-xl">📍</span>
+              <div>
+                <h4 class="font-bold text-slate-900 mb-1">自取地點說明</h4>
+                <p class="font-light">
+                  本活動為鄰里義賣，非專業電商，以<strong>自取為主</strong>：
+                </p>
+                <ul class="list-disc list-inside mt-2 pl-2 space-y-1 text-slate-600 font-light">
+                  <li><strong>歸仁區住家</strong>（近歸仁市區，詳細地址於下單後 LINE 告知）</li>
+                  <li><strong>永康區學校</strong>（台南應用科技大學附近，自取時間另約）</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <span class="flex-shrink-0 text-xl">🚗</span>
+              <div>
+                <h4 class="font-bold text-slate-900 mb-1">外送與外縣市配送限制</h4>
+                <p class="font-light text-slate-600">
+                  若您在台南市鄰近區域且單次<strong>訂購滿 3 箱以上</strong>，我們可以親送至府上。外縣市買家由於大目釋迦運送極易因為碰撞而提前熟軟、損耗，除非您非常理解並極想幫忙老農，否則較不建議下單喔！
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-4 bg-white/70 p-4 rounded-xl border border-amber-200/50">
+              <span class="flex-shrink-0 text-xl">🧊</span>
+              <div>
+                <h4 class="font-bold text-rose-700 mb-1">釋迦食用重要提醒（非常重要！）</h4>
+                <p class="font-medium text-slate-800">
+                  大目釋迦收到後，未軟熟前<span class="text-rose-600 font-bold underline">「絕對不可以放冰箱」</span>！
+                </p>
+                <p class="mt-1 text-slate-600 font-light text-sm">
+                  若在變軟前放入冰箱，釋迦會變為「啞巴果」，之後就再也無法變軟、無法食用了！請務必先放置於室溫通風處，待摸起來整顆微微熟軟後，即可削開食用，或放入冰箱冷藏保存。
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Pre-order Form Section -->
+    <section id="order-form-section" class="py-16 md:py-24 bg-gradient-to-b from-orchard-50 to-orchard-100/50">
+      <div class="max-w-3xl mx-auto px-6">
+        
+        <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100">
+          
+          <!-- Form Header -->
+          <div class="text-center mb-10 border-b border-slate-100 pb-8">
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900 mb-2 flex items-center justify-center gap-2">
+              <span>✍️</span> 愛心預購登記表
+            </h2>
+            <p class="text-slate-500 text-sm md:text-base font-light">
+              請填妥以下資訊登記預購，我們收到雲端通知後將會與您對帳聯絡！
+            </p>
+            
+            <!-- Real-time stock display -->
+            <div class="mt-4 inline-flex items-center gap-4 bg-orchard-50 border border-orchard-200/60 rounded-full px-4 py-1.5 text-sm">
+              <span class="text-slate-600 flex items-center gap-1">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 雲端預購進度
+              </span>
+              <span class="h-3 w-px bg-orchard-200"></span>
+              <span class="font-bold text-slate-800">
+                目前剩餘：<span id="stock-display" class="text-emerald-700 font-extrabold text-base">--</span> 箱
+              </span>
+            </div>
+          </div>
+
+          <!-- Alert banner if sold out -->
+          <div id="soldout-banner" class="hidden mb-6 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl p-4 text-center font-bold">
+            ⚠️ 抱歉！目前預購數量已達上限，已暫時停止預購。謝謝您的熱心支持！
+          </div>
+
+          <!-- Order Form -->
+          <form id="orderForm" class="space-y-6" onsubmit="event.preventDefault(); handleFormSubmit();">
+            
+            <!-- Buyer Name -->
+            <div>
+              <label for="buyer-name" class="block text-slate-700 font-bold mb-2 text-sm md:text-base">
+                訂購人姓名 <span class="text-rose-500">*</span>
+              </label>
+              <input type="text" id="buyer-name" required
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orchard-500 focus:border-transparent transition-all"
+                placeholder="請輸入您的真實姓名">
+            </div>
+
+            <!-- Buyer Phone -->
+            <div>
+              <label for="buyer-phone" class="block text-slate-700 font-bold mb-2 text-sm md:text-base">
+                聯絡電話 / 手機 <span class="text-rose-500">*</span>
+              </label>
+              <input type="tel" id="buyer-phone" required pattern="^09[0-9]{8}$"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orchard-500 focus:border-transparent transition-all"
+                placeholder="例：0912345678 (10碼手機號碼)">
+              <p class="text-slate-400 text-xs mt-1">請填寫 10 碼行動電話，方便貨到通知聯繫。</p>
+            </div>
+
+            <!-- Buyer LINE ID -->
+            <div>
+              <label for="buyer-line" class="block text-slate-700 font-bold mb-2 text-sm md:text-base">
+                LINE ID <span class="text-slate-400 text-xs font-normal">（選填，方便通知取貨）</span>
+              </label>
+              <input type="text" id="buyer-line"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orchard-500 focus:border-transparent transition-all"
+                placeholder="請輸入您的 LINE ID">
+            </div>
+
+            <!-- Order Quantity -->
+            <div class="bg-orchard-50/50 p-6 rounded-2xl border border-orchard-100">
+              <label class="block text-slate-800 font-bold mb-3 text-sm md:text-base">
+                訂購數量（單價 $650 / 箱）<span class="text-rose-500">*</span>
+              </label>
+              
+              <div class="flex items-center gap-4">
+                <!-- Minus button -->
+                <button type="button" onclick="changeQuantity(-1)"
+                  class="w-12 h-12 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 active:scale-95 transition-all text-xl font-bold flex items-center justify-center shadow-sm">
+                  -
+                </button>
+                <!-- Numeric Input -->
+                <input type="number" id="order-qty" value="1" min="1" max="60" required readonly
+                  class="w-16 h-12 bg-white rounded-xl border border-slate-200 text-center text-lg font-bold text-slate-800 focus:outline-none">
+                <!-- Plus button -->
+                <button type="button" onclick="changeQuantity(1)"
+                  class="w-12 h-12 rounded-xl bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 active:scale-95 transition-all text-xl font-bold flex items-center justify-center shadow-sm">
+                  +
+                </button>
+                
+                <span class="text-slate-500 text-sm">箱（每箱 14 顆）</span>
+              </div>
+              
+              <!-- Quantity Warning text -->
+              <p id="qty-warning" class="hidden text-rose-600 text-sm mt-2 font-medium"></p>
+              
+              <!-- Dynamic Price Subtotal -->
+              <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
+                <span class="text-slate-600 text-sm font-medium">總金額小計</span>
+                <span class="text-slate-500 text-sm">
+                  NT$ <span id="subtotal-display" class="text-2xl font-black text-warmSun-600">650</span> 元
+                </span>
+              </div>
+            </div>
+
+            <!-- Pickup Method -->
+            <div>
+              <label class="block text-slate-700 font-bold mb-3 text-sm md:text-base">
+                取貨方式 <span class="text-rose-500">*</span>
+              </label>
+              <div class="space-y-3">
+                <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+                  <input type="radio" name="pickup-method" value="歸仁住家自取" checked required onclick="validatePickupRule()"
+                    class="mt-1 h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
+                  <div>
+                    <span class="font-bold text-slate-800 text-sm md:text-base">我家自取（台南歸仁）</span>
+                    <p class="text-xs text-slate-500 mt-0.5">近歸仁市區，下單後另約時間詳細地址。</p>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+                  <input type="radio" name="pickup-method" value="永康學校自取" onclick="validatePickupRule()"
+                    class="mt-1 h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
+                  <div>
+                    <span class="font-bold text-slate-800 text-sm md:text-base">學校自取（台南永康）</span>
+                    <p class="text-xs text-slate-500 mt-0.5">台南應用科技大學附近，自取時間另行協調。</p>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+                  <input type="radio" name="pickup-method" value="滿3箱親送(限台南鄰近區域)" onclick="validatePickupRule()"
+                    class="mt-1 h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
+                  <div>
+                    <span class="font-bold text-slate-800 text-sm md:text-base">滿 3 箱以上親送（限台南鄰近區域）</span>
+                    <p class="text-xs text-slate-500 mt-0.5">僅提供給單次訂購 3 箱以上，且送貨地為台南市區及鄰近區域之買家。</p>
+                  </div>
+                </label>
+              </div>
+              <p id="pickup-warning" class="hidden text-rose-600 text-sm mt-2 font-medium">⚠️ 親送需滿 3 箱以上喔！請增加箱數或更改為自取。</p>
+            </div>
+
+            <!-- Pickup Time (Checkbox Multi-select) -->
+            <div>
+              <label class="block text-slate-700 font-bold mb-2 text-sm md:text-base">
+                方便取貨時段（可複選） <span class="text-rose-500">*</span>
+              </label>
+              <div class="grid grid-cols-3 gap-3">
+                <label class="flex items-center justify-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-center text-sm transition-all">
+                  <input type="checkbox" name="pickup-time" value="平日白天" checked class="sr-only">
+                  <span class="checkbox-btn font-semibold text-slate-600">平日白天</span>
+                </label>
+                <label class="flex items-center justify-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-center text-sm transition-all">
+                  <input type="checkbox" name="pickup-time" value="平日晚上" class="sr-only">
+                  <span class="checkbox-btn font-semibold text-slate-600">平日晚上</span>
+                </label>
+                <label class="flex items-center justify-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer text-center text-sm transition-all">
+                  <input type="checkbox" name="pickup-time" value="假日" class="sr-only">
+                  <span class="checkbox-btn font-semibold text-slate-600">假日</span>
+                </label>
+              </div>
+              <p id="time-warning" class="hidden text-rose-600 text-sm mt-2 font-medium">⚠️ 請至少勾選一個方便取貨的時段。</p>
+            </div>
+
+            <!-- Payment Method -->
+            <div>
+              <label class="block text-slate-700 font-bold mb-3 text-sm md:text-base">
+                付款方式 <span class="text-rose-500">*</span>
+              </label>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+                  <input type="radio" name="payment-method" value="取貨時付現" checked required onclick="toggleTransferPanel(false)"
+                    class="h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
+                  <span class="font-semibold text-slate-800 text-sm md:text-base">取貨時付現</span>
+                </label>
+                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
+                  <input type="radio" name="payment-method" value="提前銀行轉帳" onclick="toggleTransferPanel(true)"
+                    class="h-4 w-4 text-orchard-600 border-slate-300 focus:ring-orchard-500">
+                  <span class="font-semibold text-slate-800 text-sm md:text-base">提前銀行轉帳</span>
+                </label>
+              </div>
+
+              <!-- Bank details sub-panel (Collapsible) -->
+              <div id="transfer-panel" class="collapse-panel rounded-2xl bg-amber-50/70 border border-amber-200 p-5 space-y-4">
+                <div class="text-sm space-y-1.5 text-amber-900">
+                  <h4 class="font-bold text-base mb-1">🏦 轉帳帳戶資訊：</h4>
+                  <p>【銀行代碼】<strong>007 第一銀行 金城分行</strong></p>
+                  <p>【帳戶號碼】<strong>60750821518</strong></p>
+                  <p>【帳戶戶名】<strong>陳老先生/義賣代收</strong></p>
+                </div>
+                
+                <div>
+                  <label for="bank-last5" class="block text-amber-950 font-bold mb-1.5 text-sm">
+                    匯款帳號後五碼 <span class="text-rose-500">*</span>
+                  </label>
+                  <input type="text" id="bank-last5" max-length="5" pattern="^[0-9]{5}$"
+                    class="w-full px-3 py-2 text-sm rounded-lg border border-amber-300 bg-white focus:outline-none focus:ring-2 focus:ring-orchard-500 focus:border-transparent transition-all"
+                    placeholder="請輸入轉帳帳號末 5 碼">
+                </div>
+              </div>
+            </div>
+
+            <!-- Remarks (Optional) -->
+            <div>
+              <label for="buyer-remarks" class="block text-slate-700 font-bold mb-2 text-sm md:text-base">
+                備註說明 <span class="text-slate-400 text-xs font-normal">（選填，如有特定時間需求等請備註）</span>
+              </label>
+              <textarea id="buyer-remarks" rows="3"
+                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orchard-500 focus:border-transparent transition-all"
+                placeholder="例：希望下午面交、包裝送人用請選大顆一點...等"></textarea>
+            </div>
+
+            <!-- Form Submit Button -->
+            <div class="pt-4">
+              <button type="submit" id="submit-btn"
+                class="w-full py-4 bg-orchard-600 hover:bg-orchard-700 active:scale-98 transition-all text-white text-lg font-bold rounded-2xl shadow-lg hover:shadow-orchard-600/30 flex items-center justify-center gap-2">
+                確認預購登記 ➔
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal 1: Confirm Details Glassmorphism Modal -->
+  <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md hidden transition-all duration-300">
+    <div class="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-slate-100 scale-95 transition-all">
+      <h3 class="text-xl md:text-2xl font-black text-slate-900 mb-6 pb-3 border-b border-slate-100 flex items-center gap-2">
+        📋 核對您的訂購明細
+      </h3>
+      
+      <div class="space-y-3.5 mb-8 text-slate-700 text-sm md:text-base">
+        <div class="flex justify-between border-b border-slate-50 pb-2">
+          <span class="text-slate-400">訂購姓名</span>
+          <span class="font-bold text-slate-800" id="m-name"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-50 pb-2">
+          <span class="text-slate-400">聯絡電話</span>
+          <span class="font-semibold text-slate-800" id="m-phone"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-50 pb-2">
+          <span class="text-slate-400">LINE ID</span>
+          <span class="font-semibold text-slate-800" id="m-line">--</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-50 pb-2">
+          <span class="text-slate-400">訂購箱數</span>
+          <span class="font-bold text-orchard-600" id="m-qty"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-50 pb-2">
+          <span class="text-slate-400">取貨方式</span>
+          <span class="font-semibold text-slate-800" id="m-pickup"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-50 pb-2">
+          <span class="text-slate-400">方便取貨時段</span>
+          <span class="font-semibold text-slate-800" id="m-time"></span>
+        </div>
+        <div class="flex justify-between border-b border-slate-50 pb-2">
+          <span class="text-slate-400">付款方式</span>
+          <span class="font-semibold text-slate-800" id="m-payment"></span>
+        </div>
+        <div id="m-bank-row" class="hidden flex justify-between border-b border-slate-50 pb-2 bg-amber-50/50 p-2 rounded-lg">
+          <span class="text-amber-800 font-medium">轉帳帳號後五碼</span>
+          <span class="font-bold text-amber-900" id="m-last5"></span>
+        </div>
+        <div class="flex flex-col border-b border-slate-50 pb-2">
+          <span class="text-slate-400 mb-1">備註說明</span>
+          <p class="text-slate-600 text-xs italic bg-slate-50 p-2.5 rounded-lg break-words" id="m-remarks">無</p>
+        </div>
+        <div class="flex justify-between pt-2">
+          <span class="text-slate-900 font-bold">總計應付金額</span>
+          <span class="text-xl font-black text-warmSun-600" id="m-total"></span>
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <button onclick="closeConfirmModal()"
+          class="flex-1 py-3 border border-slate-200 text-slate-500 rounded-xl hover:bg-slate-50 text-sm md:text-base font-semibold active:scale-95 transition-all">
+          修改資料
+        </button>
+        <button onclick="submitOrder()" id="modal-submit-btn"
+          class="flex-1 py-3 bg-orchard-600 text-white rounded-xl hover:bg-orchard-700 text-sm md:text-base font-bold active:scale-95 transition-all shadow-md flex items-center justify-center gap-2">
+          正確無誤，送出訂單
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Success Modal (Firebase Version) -->
+  <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md hidden transition-all duration-300">
+    <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border border-slate-100 scale-95 transition-all text-center">
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 animate-bounce">
+        🎉
+      </div>
+      
+      <h3 class="text-xl md:text-2xl font-black text-slate-900 mb-2">
+        預購登記已送出！
+      </h3>
+      <p class="text-sm text-slate-600 mb-6 leading-relaxed font-light">
+        感謝您的愛心支持！您的預購資料已安全寫入雲端系統，系統已自動為您保留庫存。<br>我們將會透過電話簡訊或 LINE 與您約定具體的自取/配送時間！
+      </p>
+
+      <!-- Optional Backup LINE link -->
+      <div class="text-left text-xs text-slate-500 space-y-2 mb-6 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
+        <p class="font-bold text-emerald-800">💡 聯絡說明：</p>
+        <p>為方便後續即時通知，您也可以主動加我們的 LINE 與我們確認對帳與交貨時間喔！</p>
+      </div>
+
+      <div class="space-y-3">
+        <a href="https://line.me/ti/p/~abel54575457" target="_blank"
+          class="block w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-2xl shadow active:scale-98 transition-all flex items-center justify-center gap-1.5 text-sm">
+          🟢 點此加 LINE 聯絡 (ID: abel54575457)
+        </a>
+        <button onclick="resetForm()"
+          class="block w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-2xl active:scale-98 transition-all">
+          關閉視窗
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div id="adminLoginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md hidden transition-all duration-300">
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full shadow-2xl text-center">
+      <h3 class="text-lg font-bold text-slate-900 mb-2" id="login-modal-title">🔐 管理員登入</h3>
+      <p class="text-xs text-slate-400 mb-4" id="login-modal-desc">請輸入管理帳號與密碼進行驗證</p>
+      
+      <!-- Login Inputs (Dynamic Email/Pass or PIN based on config) -->
+      <div id="firebase-login-fields" class="space-y-3 mb-4">
+        <input type="email" id="admin-email" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orchard-500" placeholder="管理員信箱 (Email)">
+        <input type="password" id="admin-password" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orchard-500" placeholder="管理員密碼">
+      </div>
+      
+      <div id="offline-login-fields" class="hidden mb-4">
+        <input type="password" id="admin-pin" class="w-full px-4 py-3 rounded-xl border border-slate-200 text-center text-lg focus:outline-none focus:ring-2 focus:ring-orchard-500" placeholder="請輸入本機 PIN 碼">
+      </div>
+
+      <div class="flex gap-3">
+        <button onclick="closeAdminLogin()" class="flex-1 py-2.5 border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50">取消</button>
+        <button onclick="performAdminLogin()" class="flex-1 py-2.5 bg-orchard-600 text-white rounded-xl text-sm font-bold hover:bg-orchard-700">登入</button>
+      </div>
+      <p id="admin-login-err" class="hidden text-rose-600 text-xs mt-2.5 font-semibold"></p>
+    </div>
+  </div>
+
+  <!-- Admin Panel Drawer (Slide in) -->
+  <div id="adminPanel" class="fixed inset-y-0 right-0 z-40 w-full max-w-3xl bg-white shadow-2xl border-l border-slate-100 transform translate-x-full transition-transform duration-300 flex flex-col hidden">
+    <!-- Header -->
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+      <div>
+        <h3 class="text-xl font-bold text-slate-900 flex items-center gap-1.5">
+          📊 預購訂單管理後台
+          <span id="admin-badge-type" class="text-xs px-2 py-0.5 rounded-full font-medium">--</span>
+        </h3>
+        <p class="text-xs text-slate-500 mt-0.5" id="admin-panel-sub-desc">已成功連線雲端資料庫，即時對帳中。</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button id="admin-logout-btn" onclick="logoutAdmin()" class="hidden px-2.5 py-1 text-slate-500 border border-slate-200 rounded-lg hover:bg-slate-50 text-xs font-semibold">
+          登出
+        </button>
+        <button onclick="closeAdminPanel()" class="text-slate-400 hover:text-slate-600 text-xl font-bold p-2">✕</button>
+      </div>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="p-6 grid grid-cols-3 gap-4 border-b border-slate-100 bg-slate-50/50">
+      <div class="bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm text-center">
+        <span class="text-xs text-slate-400 block mb-1">已預購箱數</span>
+        <span id="stat-sold" class="text-2xl font-black text-emerald-700">0</span> 箱
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm text-center">
+        <span class="text-xs text-slate-400 block mb-1">剩餘庫存</span>
+        <span id="stat-stock" class="text-2xl font-black text-amber-600">60</span> 箱
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm text-center">
+        <span class="text-xs text-slate-400 block mb-1">預估銷售額</span>
+        <span class="text-xs text-slate-500 block">NT$</span>
+        <span id="stat-money" class="text-xl font-black text-warmSun-600">0</span>
+      </div>
+    </div>
+
+    <!-- Order List -->
+    <div class="flex-grow overflow-y-auto p-6 space-y-4">
+      <div class="flex justify-between items-center mb-2">
+        <h4 class="font-bold text-slate-800">📋 雲端訂單清單 (<span id="stat-order-count">0</span> 筆)</h4>
+        <div class="flex gap-2">
+          <button onclick="exportToCSV()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1 shadow-sm">
+            📥 匯出 Excel (CSV)
+          </button>
+          <button id="clear-data-btn" onclick="clearAllOrders()" class="px-3 py-1.5 bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 text-xs font-bold rounded-lg transition-all">
+            🗑️ 清空資料
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto border border-slate-200 rounded-xl">
+        <table class="w-full text-left text-sm border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-slate-600 border-b border-slate-200 font-semibold">
+              <th class="p-3">姓名/電話</th>
+              <th class="p-3">箱數/金額</th>
+              <th class="p-3">取貨點/時段</th>
+              <th class="p-3">付款/狀態</th>
+              <th class="p-3">時間/備註</th>
+              <th class="p-3 text-center">操作</th>
+            </tr>
+          </thead>
+          <tbody id="admin-table-body" class="divide-y divide-slate-100">
+            <tr>
+              <td colspan="6" class="p-8 text-center text-slate-400 italic">載入資料中...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="bg-orchard-950 text-orchard-200 py-12 px-6 border-t border-orchard-900/50">
+    <div class="max-w-4xl mx-auto text-center space-y-6">
+      
+      <!-- Logo/Brand -->
+      <div class="inline-flex items-center gap-2 text-white font-bold text-lg">
+        <span>🍈</span> 愛心義賣預購小組
+      </div>
+      
+      <p class="text-sm max-w-xl mx-auto text-orchard-300 font-light leading-relaxed">
+        本義賣活動所售出之款項全部由老農夫夫婦直接收取，並非商業營利行為。感謝各位愛心買家支持，讓老奶奶的心血得以順利收割！
+      </p>
+
+      <!-- LINE Link Button -->
+      <div>
+        <a href="https://line.me/ti/p/~abel54575457" target="_blank"
+          class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-full shadow transition-all text-sm">
+          🟢 點此加老農聯絡人 LINE
+        </a>
+      </div>
+
+      <!-- Info/Privacy -->
+      <div class="text-xs text-orchard-400/80 pt-6 border-t border-orchard-900/50 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <button onclick="openAdminLogin()" id="privacy-stmt" class="hover:text-white transition-colors cursor-pointer text-left">
+          🔐 本網頁收集之個人資料僅供本次聯絡與出貨使用，點此進入管理後台管理訂單。
+        </button>
+        <span>© 2026 台南老農釋迦義賣小組 版權所有</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Floating Order CTA on Mobile -->
+  <div class="fixed bottom-4 right-4 z-30 md:hidden">
+    <a href="#order-form-section" 
+      class="bg-warmSun-500 hover:bg-warmSun-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all text-2xl relative">
+      ✍️
+      <!-- Pulse badge -->
+      <span class="absolute top-0 right-0 flex h-3.5 w-3.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-500 border-2 border-white"></span>
+      </span>
+    </a>
+  </div>
+
+  <!-- JavaScript Programming -->
+  <script>
+    // =========================================================================
+    // 📢 請在下方填入您的 Firebase 專案設定資訊！
+    // 您可以在 Firebase Console -> 專案設定 -> 一般 -> 您的應用程式 中找到
+    // =========================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyDealqLLY51Qvm6KzA14SRkBaqE4Rha2pg",
+      authDomain: "shijia-preorder.firebaseapp.com",
+      projectId: "shijia-preorder",
+      storageBucket: "shijia-preorder.firebasestorage.app",
+      messagingSenderId: "1016352937100",
+      appId: "1:1016352937100:web:fcf392574deef360f5d7a9",
+      measurementId: "G-QRRX597P9X"
+    };
+
+    // System Settings
+    const DEFAULT_TOTAL_STOCK = 60;
+    const BOX_PRICE = 650;
+    const OFFLINE_ADMIN_PIN = "8888"; // 本地測試密碼
+
+    // Page state variables
+    let isOfflineDemo = true;
+    let ordersList = [];
+    let currentStock = DEFAULT_TOTAL_STOCK;
+    let selectedQuantity = 1;
+    let db = null;
+    let auth = null;
+    let ordersUnsubscribe = null;
+
+    // DOM Elements
+    const orderQtyInput = document.getElementById('order-qty');
+    const subtotalDisplay = document.getElementById('subtotal-display');
+    const qtyWarning = document.getElementById('qty-warning');
+    const stockDisplay = document.getElementById('stock-display');
+    const soldoutBanner = document.getElementById('soldout-banner');
+    const submitBtn = document.getElementById('submit-btn');
+    const transferPanel = document.getElementById('transfer-panel');
+    const bankLast5Input = document.getElementById('bank-last5');
+    const pickupWarning = document.getElementById('pickup-warning');
+    const timeWarning = document.getElementById('time-warning');
+
+    // Init Page Logic
+    window.addEventListener('DOMContentLoaded', () => {
+      // 1. Detect if Firebase config is configured or placeholder
+      if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+        isOfflineDemo = false;
+        document.getElementById('offline-badge').classList.add('hidden');
+      } else {
+        isOfflineDemo = true;
+        document.getElementById('offline-badge').classList.remove('hidden');
+      }
+
+      // 2. Initialize application database & connection
+      initDatabase();
+
+      // 3. Render checkbox grid button styles
+      setupCheckboxButtons();
+
+      // 4. Initial update subtotal
+      updateSubtotal();
+    });
+
+    // Initialize Firebase or Fallback to LocalStorage
+    function initDatabase() {
+      if (isOfflineDemo) {
+        console.log("🚀 [離線測試] 偵測到未設定 Firebase Config，已啟用本機展示模式。");
+        loadOrdersFromLocalStorage();
+      } else {
+        console.log("☁️ [雲端模式] 偵測到已設定 Firebase Config，正在連線資料庫...");
+        try {
+          firebase.initializeApp(firebaseConfig);
+          db = firebase.firestore();
+          auth = firebase.auth();
+          
+          // Connect real-time database listener
+          listenToCloudOrders();
+        } catch (error) {
+          console.error("Firebase 初始化失敗，自動切換至離線測試模式：", error);
+          isOfflineDemo = true;
+          document.getElementById('offline-badge').classList.remove('hidden');
+          loadOrdersFromLocalStorage();
+        }
+      }
+    }
+
+    // --- A. LOCALDEMO MODE DATABASE OPERATIONS ---
+    function loadOrdersFromLocalStorage() {
+      try {
+        const stored = localStorage.getItem('shijia_orders');
+        ordersList = stored ? JSON.parse(stored) : [];
+      } catch (e) {
+        ordersList = [];
+      }
+      recomputeStock();
+    }
+
+    // --- B. CLOUD DATABASE (FIREBASE) OPERATIONS ---
+    function listenToCloudOrders() {
+      // Setup real-time listener for ordering counts
+      // Buyers can fetch order sums to compute stock without authentication
+      ordersUnsubscribe = db.collection("orders").onSnapshot((snapshot) => {
+        ordersList = [];
+        snapshot.forEach((doc) => {
+          ordersList.push({ id: doc.id, ...doc.data() });
+        });
+        recomputeStock();
+        
+        // If admin panel is currently open and logged in, refresh the table view
+        if (document.getElementById('adminPanel').classList.contains('hidden') === false) {
+          renderAdminTable();
+        }
+      }, (error) => {
+        console.warn("無法取得即時資料更新 (若無權限屬正常，這表示您的安全規則防護有效)", error);
+        // Fallback once: fetch once or keep static stock if blocked
+      });
+    }
+
+    // Shared stock logic
+    function recomputeStock() {
+      let soldCount = 0;
+      ordersList.forEach(order => {
+        soldCount += parseInt(order.quantity || 0);
+      });
+
+      currentStock = DEFAULT_TOTAL_STOCK - soldCount;
+      if (currentStock < 0) currentStock = 0;
+
+      // Update UI displays
+      stockDisplay.textContent = currentStock;
+
+      // Disable/enable buy buttons
+      if (currentStock <= 0) {
+        soldoutBanner.classList.remove('hidden');
+        submitBtn.disabled = true;
+        submitBtn.className = "w-full py-4 bg-slate-300 text-slate-500 text-lg font-bold rounded-2xl cursor-not-allowed text-center";
+        submitBtn.textContent = "❌ 已售罄，非常感謝支持";
+      } else {
+        soldoutBanner.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.className = "w-full py-4 bg-orchard-600 hover:bg-orchard-700 active:scale-98 transition-all text-white text-lg font-bold rounded-2xl shadow-lg hover:shadow-orchard-600/30 flex items-center justify-center gap-2";
+        submitBtn.textContent = "確認預購登記 ➔";
+      }
+    }
+
+    // Checkbox grid styling helpers
+    function setupCheckboxButtons() {
+      const labels = document.querySelectorAll('input[name="pickup-time"]');
+      labels.forEach(input => {
+        const parent = input.parentElement;
+        const textSpan = parent.querySelector('.checkbox-btn');
+        
+        const syncState = () => {
+          if (input.checked) {
+            parent.className = "flex items-center justify-center p-3 rounded-xl border-2 border-orchard-600 bg-orchard-50 text-center text-sm transition-all cursor-pointer";
+            textSpan.className = "checkbox-btn font-bold text-orchard-700";
+          } else {
+            parent.className = "flex items-center justify-center p-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-center text-sm transition-all cursor-pointer";
+            textSpan.className = "checkbox-btn font-semibold text-slate-500";
+          }
+        };
+
+        syncState();
+        input.addEventListener('change', () => {
+          syncState();
+          validateTimeCheckboxes();
+        });
+      });
+    }
+
+    // Add / Subtract boxes
+    function changeQuantity(val) {
+      if (currentStock <= 0) return;
+      let newQty = selectedQuantity + val;
+      if (newQty < 1) newQty = 1;
+      
+      if (newQty > currentStock) {
+        newQty = currentStock;
+        qtyWarning.textContent = `⚠️ 很抱歉，目前僅剩餘 ${currentStock} 箱可以預購。`;
+        qtyWarning.classList.remove('hidden');
+      } else {
+        qtyWarning.classList.add('hidden');
+      }
+      
+      selectedQuantity = newQty;
+      orderQtyInput.value = selectedQuantity;
+      
+      updateSubtotal();
+      validatePickupRule();
+    }
+
+    function updateSubtotal() {
+      const subtotal = selectedQuantity * BOX_PRICE;
+      subtotalDisplay.textContent = subtotal.toLocaleString();
+    }
+
+    // 3 boxes minimum for local delivery (親送) validation
+    function validatePickupRule() {
+      const pickupMethods = document.getElementsByName('pickup-method');
+      let selectedVal = "";
+      for (const rad of pickupMethods) {
+        if (rad.checked) { selectedVal = rad.value; break; }
+      }
+      
+      if (selectedVal === "滿3箱親送(限台南鄰近區域)" && selectedQuantity < 3) {
+        pickupWarning.classList.remove('hidden');
+        return false;
+      } else {
+        pickupWarning.classList.add('hidden');
+        return true;
+      }
+    }
+
+    // Checkbox multi-select validation
+    function validateTimeCheckboxes() {
+      const checkedTimes = document.querySelectorAll('input[name="pickup-time"]:checked');
+      if (checkedTimes.length === 0) {
+        timeWarning.classList.remove('hidden');
+        return false;
+      } else {
+        timeWarning.classList.add('hidden');
+        return true;
+      }
+    }
+
+    function toggleTransferPanel(show) {
+      if (show) {
+        transferPanel.classList.add('open');
+        bankLast5Input.required = true;
+      } else {
+        transferPanel.classList.remove('open');
+        bankLast5Input.required = false;
+        bankLast5Input.value = "";
+      }
+    }
+
+    // Form validation and modal opening
+    function handleFormSubmit() {
+      const isPickupValid = validatePickupRule();
+      const isTimeValid = validateTimeCheckboxes();
+      if (!isPickupValid || !isTimeValid) {
+        document.getElementById('order-form-section').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      // Check current live stock once more (only if Firebase is active)
+      if (!isOfflineDemo) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "⏳ 檢查庫存中...";
+        
+        db.collection("orders").get().then((querySnapshot) => {
+          let totalSold = 0;
+          querySnapshot.forEach(doc => totalSold += doc.data().quantity || 0);
+          const freshStock = DEFAULT_TOTAL_STOCK - totalSold;
+          
+          if (freshStock < selectedQuantity) {
+            alert(`⚠️ 抱歉！在庫存處理中發現剩餘庫存（${freshStock}箱）已不足您訂購的箱數（${selectedQuantity}箱），請調整訂購箱數。`);
+            currentStock = freshStock;
+            recomputeStock();
+            return;
+          }
+          openConfirmationModalFlow();
+        }).catch((err) => {
+          console.error("即時庫存校驗出錯: ", err);
+          // Fallback to flow directly if database has connection issues
+          openConfirmationModalFlow();
+        });
+      } else {
+        openConfirmationModalFlow();
+      }
+    }
+
+    function openConfirmationModalFlow() {
+      // Re-enable button
+      recomputeStock();
+
+      const name = document.getElementById('buyer-name').value.trim();
+      const phone = document.getElementById('buyer-phone').value.trim();
+      const line = document.getElementById('buyer-line').value.trim() || "未填寫";
+      const qty = parseInt(orderQtyInput.value);
+      
+      const pickupMethods = document.getElementsByName('pickup-method');
+      let pickup = "";
+      for (const rad of pickupMethods) {
+        if (rad.checked) { pickup = rad.value; break; }
+      }
+
+      const checkedTimes = document.querySelectorAll('input[name="pickup-time"]:checked');
+      let times = [];
+      checkedTimes.forEach(c => times.push(c.value));
+      const timesStr = times.join(', ');
+
+      const paymentMethods = document.getElementsByName('payment-method');
+      let payment = "";
+      for (const rad of paymentMethods) {
+        if (rad.checked) { payment = rad.value; break; }
+      }
+
+      let last5 = "";
+      if (payment === "提前銀行轉帳") {
+        last5 = bankLast5Input.value.trim();
+        if (!/^[0-9]{5}$/.test(last5)) {
+          alert("轉帳帳號後五碼格式錯誤，請填寫正確的五位數字。");
+          bankLast5Input.focus();
+          return;
+        }
+      }
+
+      const remarks = document.getElementById('buyer-remarks').value.trim() || "無";
+      const totalAmount = qty * BOX_PRICE;
+
+      // Populate confirmation values
+      document.getElementById('m-name').textContent = name;
+      document.getElementById('m-phone').textContent = phone;
+      document.getElementById('m-line').textContent = line;
+      document.getElementById('m-qty').textContent = `${qty} 箱`;
+      document.getElementById('m-pickup').textContent = pickup;
+      document.getElementById('m-time').textContent = timesStr;
+      document.getElementById('m-payment').textContent = payment;
+      
+      if (payment === "提前銀行轉帳") {
+        document.getElementById('m-bank-row').classList.remove('hidden');
+        document.getElementById('m-last5').textContent = last5;
+      } else {
+        document.getElementById('m-bank-row').classList.add('hidden');
+      }
+      
+      document.getElementById('m-remarks').textContent = remarks;
+      document.getElementById('m-total').textContent = `NT$ ${totalAmount.toLocaleString()} 元`;
+
+      openConfirmModal();
+    }
+
+    function openConfirmModal() {
+      document.getElementById('confirmModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirmModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // Write database and present success modal
+    function submitOrder() {
+      const now = new Date();
+      const timeStr = `${now.getFullYear()}/${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+
+      const name = document.getElementById('m-name').textContent;
+      const phone = document.getElementById('m-phone').textContent;
+      const line = document.getElementById('m-line').textContent;
+      const qty = parseInt(orderQtyInput.value);
+      const totalAmount = qty * BOX_PRICE;
+      const pickup = document.getElementById('m-pickup').textContent;
+      const times = document.getElementById('m-time').textContent;
+      const payment = document.getElementById('m-payment').textContent;
+      const last5 = document.getElementById('m-last5').textContent;
+      const remarks = document.getElementById('m-remarks').textContent;
+
+      const orderObj = {
+        name,
+        phone,
+        line,
+        quantity: qty,
+        total: totalAmount,
+        pickup,
+        times,
+        payment,
+        last5,
+        remarks,
+        time: timeStr,
+        status: "待處理" // 初始訂單狀態
+      };
+
+      const modalSubmitBtn = document.getElementById('modal-submit-btn');
+      modalSubmitBtn.disabled = true;
+      modalSubmitBtn.textContent = "⏳ 送出中...";
+
+      if (isOfflineDemo) {
+        // A. Offline LocalStorage fallback
+        orderObj.id = "ORD_" + Date.now();
+        ordersList.push(orderObj);
+        try {
+          localStorage.setItem('shijia_orders', JSON.stringify(ordersList));
+        } catch (e){}
+        
+        setTimeout(() => {
+          finalizeOrderSubmission();
+        }, 600);
+      } else {
+        // B. Write directly to Firestore Cloud Database
+        db.collection("orders").add(orderObj)
+          .then((docRef) => {
+            console.log("雲端預購登記成功，ID: ", docRef.id);
+            finalizeOrderSubmission();
+          })
+          .catch((error) => {
+            console.error("雲端預購登記出錯: ", error);
+            alert("雲端資料庫儲存失敗，已自動改以本地離線形式暫存訂單。請通知系統管理員檢查 Firebase 設定。");
+            
+            // Offline fallback write
+            orderObj.id = "ORD_" + Date.now();
+            ordersList.push(orderObj);
+            try { localStorage.setItem('shijia_orders', JSON.stringify(ordersList)); } catch (e){}
+            finalizeOrderSubmission();
+          });
+      }
+    }
+
+    function finalizeOrderSubmission() {
+      // Re-enable modal button
+      const modalSubmitBtn = document.getElementById('modal-submit-btn');
+      modalSubmitBtn.disabled = false;
+      modalSubmitBtn.textContent = "正確無誤，送出訂單";
+
+      closeConfirmModal();
+      
+      // Update inventory display
+      recomputeStock();
+
+      // Show success modal
+      document.getElementById('successModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function resetForm() {
+      document.getElementById('orderForm').reset();
+      selectedQuantity = 1;
+      orderQtyInput.value = 1;
+      toggleTransferPanel(false);
+      updateSubtotal();
+      
+      document.getElementById('successModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // ==========================================
+    // ADMIN PANEL MANAGEMENT SYSTEM
+    // ==========================================
+
+    function openAdminLogin() {
+      document.getElementById('admin-login-err').classList.add('hidden');
+      
+      const title = document.getElementById('login-modal-title');
+      const desc = document.getElementById('login-modal-desc');
+      const fbFields = document.getElementById('firebase-login-fields');
+      const offFields = document.getElementById('offline-login-fields');
+      
+      if (isOfflineDemo) {
+        title.textContent = "🔐 管理後台登入 (離線展示)";
+        desc.textContent = "請輸入預設密碼 8888 進行管理員登入";
+        fbFields.classList.add('hidden');
+        offFields.classList.remove('hidden');
+        document.getElementById('admin-pin').focus();
+      } else {
+        title.textContent = "🔐 管理後台登入 (Firebase)";
+        desc.textContent = "請輸入您在 Firebase 註冊的管理員帳密";
+        fbFields.classList.remove('hidden');
+        offFields.classList.add('hidden');
+        document.getElementById('admin-email').focus();
+      }
+      
+      document.getElementById('adminLoginModal').classList.remove('hidden');
+    }
+
+    function closeAdminLogin() {
+      document.getElementById('adminLoginModal').classList.add('hidden');
+      document.getElementById('admin-pin').value = "";
+      document.getElementById('admin-email').value = "";
+      document.getElementById('admin-password').value = "";
+    }
+
+    function performAdminLogin() {
+      const err = document.getElementById('admin-login-err');
+      err.classList.add('hidden');
+
+      if (isOfflineDemo) {
+        // A. PIN code login
+        const pin = document.getElementById('admin-pin').value;
+        if (pin === OFFLINE_ADMIN_PIN) {
+          closeAdminLogin();
+          openAdminPanel();
+        } else {
+          err.textContent = "密碼錯誤，本機預設密碼為 8888！";
+          err.classList.remove('hidden');
+        }
+      } else {
+        // B. Firebase Auth Login
+        const email = document.getElementById('admin-email').value.trim();
+        const pass = document.getElementById('admin-password').value;
+        
+        if (!email || !pass) {
+          err.textContent = "電子郵件與密碼皆為必填！";
+          err.classList.remove('hidden');
+          return;
+        }
+
+        auth.signInWithEmailAndPassword(email, pass)
+          .then((userCredential) => {
+            console.log("Firebase 登入成功: ", userCredential.user.email);
+            closeAdminLogin();
+            openAdminPanel();
+          })
+          .catch((error) => {
+            console.error("Firebase 登入失敗: ", error);
+            err.textContent = `登入失敗：帳號密碼錯誤，或尚未在 Firebase 開通該帳號。`;
+            err.classList.remove('hidden');
+          });
+      }
+    }
+
+    function openAdminPanel() {
+      // Update config types visual badge
+      const badge = document.getElementById('admin-badge-type');
+      const subDesc = document.getElementById('admin-panel-sub-desc');
+      const logoutBtn = document.getElementById('admin-logout-btn');
+      const clearBtn = document.getElementById('clear-data-btn');
+
+      if (isOfflineDemo) {
+        badge.textContent = "本機離線版";
+        badge.className = "text-xs px-2 py-0.5 rounded-full font-medium bg-amber-100 text-amber-800";
+        subDesc.textContent = "資料存儲於當前瀏覽器 localStorage 中，重新整理不會遺失。";
+        logoutBtn.classList.add('hidden');
+        clearBtn.classList.remove('hidden');
+      } else {
+        badge.textContent = "雲端 Firebase";
+        badge.className = "text-xs px-2 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-800";
+        subDesc.textContent = `管理員：${auth.currentUser.email} 已成功通過雲端權限校驗。`;
+        logoutBtn.classList.remove('hidden');
+        clearBtn.classList.add('hidden'); // Cloud database cannot be wiped out with one click for safety
+      }
+
+      // Render Order List table
+      renderAdminTable();
+
+      const panel = document.getElementById('adminPanel');
+      panel.classList.remove('hidden');
+      setTimeout(() => {
+        panel.classList.remove('translate-x-full');
+      }, 50);
+    }
+
+    function closeAdminPanel() {
+      const panel = document.getElementById('adminPanel');
+      panel.classList.add('translate-x-full');
+      setTimeout(() => {
+        panel.classList.add('hidden');
+      }, 300);
+    }
+
+    // Sign out from Firebase Session
+    function logoutAdmin() {
+      if (auth) {
+        auth.signOut().then(() => {
+          console.log("Firebase 已登出");
+          closeAdminPanel();
+        });
+      }
+    }
+
+    // Render Order table with full data
+    function renderAdminTable() {
+      let totalSold = 0;
+      ordersList.forEach(order => totalSold += parseInt(order.quantity || 0));
+      
+      document.getElementById('stat-sold').textContent = totalSold;
+      document.getElementById('stat-stock').textContent = DEFAULT_TOTAL_STOCK - totalSold;
+      document.getElementById('stat-money').textContent = (totalSold * BOX_PRICE).toLocaleString();
+      document.getElementById('stat-order-count').textContent = ordersList.length;
+
+      const tbody = document.getElementById('admin-table-body');
+      tbody.innerHTML = "";
+
+      if (ordersList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 italic">尚無任何預購訂單資料</td></tr>`;
+        return;
+      }
+
+      // Sort order descending chronologically
+      const sorted = [...ordersList].sort((a, b) => {
+        return new Date(b.time || 0) - new Date(a.time || 0);
+      });
+
+      sorted.forEach(ord => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 border-b border-slate-100 text-xs";
+        
+        // Status button styling
+        const currentStatus = ord.status || "待處理";
+        let statusBadgeClass = "bg-slate-100 text-slate-600";
+        if (currentStatus === "已聯絡") statusBadgeClass = "bg-amber-100 text-amber-800";
+        if (currentStatus === "已完成") statusBadgeClass = "bg-emerald-100 text-emerald-800";
+        if (currentStatus === "已取消") statusBadgeClass = "bg-rose-100 text-rose-800";
+
+        tr.innerHTML = `
+          <td class="p-3">
+            <div class="font-bold text-slate-800">${escapeHtml(ord.name)}</div>
+            <div class="text-slate-500">${escapeHtml(ord.phone)}</div>
+            <div class="text-slate-400">LINE: ${escapeHtml(ord.line)}</div>
+          </td>
+          <td class="p-3">
+            <div class="font-bold text-orchard-700">${ord.quantity} 箱</div>
+            <div class="text-slate-600">NT$ ${ord.total.toLocaleString()}</div>
+          </td>
+          <td class="p-3">
+            <div class="font-medium text-slate-700">${escapeHtml(ord.pickup)}</div>
+            <div class="text-slate-500 italic">${escapeHtml(ord.times)}</div>
+          </td>
+          <td class="p-3 space-y-1">
+            <div class="font-semibold text-slate-700">${escapeHtml(ord.payment)}</div>
+            ${ord.last5 ? `<div class="text-amber-800 font-bold bg-amber-100/50 inline-block px-1.5 py-0.5 rounded">後五碼: ${escapeHtml(ord.last5)}</div>` : ''}
+            <div>
+              <select onchange="updateOrderStatus('${ord.id}', this.value)" 
+                class="px-1.5 py-0.5 text-[10px] rounded border border-slate-200 bg-white font-medium focus:outline-none cursor-pointer">
+                <option value="待處理" ${currentStatus==='待處理'?'selected':''}>待處理</option>
+                <option value="已聯絡" ${currentStatus==='已聯絡'?'selected':''}>已聯絡</option>
+                <option value="已完成" ${currentStatus==='已完成'?'selected':''}>已完成</option>
+                <option value="已取消" ${currentStatus==='已取消'?'selected':''}>已取消</option>
+              </select>
+            </div>
+          </td>
+          <td class="p-3 space-y-1 max-w-[140px]">
+            <div class="text-slate-400">${ord.time}</div>
+            <div class="text-slate-600 break-words" title="${escapeHtml(ord.remarks)}">備註: ${escapeHtml(ord.remarks)}</div>
+          </td>
+          <td class="p-3 text-center">
+            <button onclick="deleteOrder('${ord.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded text-[10px] font-bold border border-rose-100 transition-colors">
+              刪除
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Update order status: updates Firestore document or localStorage
+    function updateOrderStatus(id, newStatus) {
+      if (isOfflineDemo) {
+        ordersList = ordersList.map(o => {
+          if (o.id === id) o.status = newStatus;
+          return o;
+        });
+        try { localStorage.setItem('shijia_orders', JSON.stringify(ordersList)); } catch(e){}
+        renderAdminTable();
+      } else {
+        db.collection("orders").doc(id).update({ status: newStatus })
+          .then(() => {
+            console.log("雲端訂單狀態已更新為: ", newStatus);
+            // Table will automatically refresh via live onSnapshot listener
+          })
+          .catch(error => {
+            console.error("更新訂單狀態出錯: ", error);
+            alert("無法更新雲端訂單狀態，權限不足或網路中斷。");
+          });
+      }
+    }
+
+    // Delete single order
+    function deleteOrder(id) {
+      if (confirm("確定要刪除這筆預購訂單嗎？刪除後將釋放該數量庫存，此操作無法還原！")) {
+        if (isOfflineDemo) {
+          ordersList = ordersList.filter(o => o.id !== id);
+          try { localStorage.setItem('shijia_orders', JSON.stringify(ordersList)); } catch(e){}
+          recomputeStock();
+          renderAdminTable();
+        } else {
+          db.collection("orders").doc(id).delete()
+            .then(() => {
+              console.log("雲端訂單已成功刪除");
+            })
+            .catch(error => {
+              console.error("刪除雲端訂單出錯: ", error);
+              alert("無權限刪除雲端訂單。");
+            });
+        }
+      }
+    }
+
+    // Wipe offline local storage (Only available on local demo)
+    function clearAllOrders() {
+      if (confirm("⚠️ 警告：確定要清空『本機』所有訂單備份嗎？所有的測試記錄將被清空！")) {
+        ordersList = [];
+        try {
+          localStorage.removeItem('shijia_orders');
+        } catch(e){}
+        recomputeStock();
+        renderAdminTable();
+      }
+    }
+
+    // Export to Excel/CSV with UTF-8 BOM traditional Chinese support
+    function exportToCSV() {
+      if (ordersList.length === 0) {
+        alert("尚無訂單可供匯出！");
+        return;
+      }
+
+      let csvContent = "\uFEFF"; // Add BOM
+      csvContent += "訂單ID,下單時間,狀態,訂購人姓名,聯絡電話,LINE ID,訂購數量,總金額,取貨方式,取貨時段,付款方式,帳號後五碼,備註說明\n";
+
+      ordersList.forEach(ord => {
+        const row = [
+          `"${ord.id || ''}"`,
+          `"${ord.time || ''}"`,
+          `"${ord.status || '待處理'}"`,
+          `"${ord.name.replace(/"/g, '""')}"`,
+          `"${ord.phone}"`,
+          `"${ord.line.replace(/"/g, '""')}"`,
+          ord.quantity,
+          ord.total,
+          `"${ord.pickup.replace(/"/g, '""')}"`,
+          `"${ord.times.replace(/"/g, '""')}"`,
+          `"${ord.payment.replace(/"/g, '""')}"`,
+          `"${ord.last5 || ''}"`,
+          `"${ord.remarks.replace(/"/g, '""')}"`
+        ];
+        csvContent += row.join(",") + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}`;
+      link.setAttribute("download", `雲端釋迦義賣預購名單_${dateStr}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
