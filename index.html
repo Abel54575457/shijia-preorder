@@ -556,11 +556,11 @@
 
               <!-- Bank details sub-panel (Collapsible) -->
               <div id="transfer-panel" class="collapse-panel rounded-2xl bg-amber-50/70 border border-amber-200 p-5 space-y-4">
-                <div class="text-sm space-y-1.5 text-amber-900">
-                  <h4 class="font-bold text-base mb-1">🏦 轉帳帳戶資訊：</h4>
-                  <p>【銀行代碼】<strong>007 第一銀行 金城分行</strong></p>
-                  <p>【帳戶號碼】<strong>60750821518</strong></p>
-                  <p>【帳戶戶名】<strong>李宛青</strong></p>
+                <div class="text-sm space-y-1.5 text-amber-900 bg-amber-100/50 p-4 rounded-xl border border-amber-200/50">
+                  <h4 class="font-bold text-sm mb-1">🏦 轉帳說明：</h4>
+                  <p class="text-xs leading-relaxed text-amber-950 font-light">
+                    為維護個人資料與交易安全，<strong>匯款轉帳帳號將於您送出表單後的下單成功視窗中顯示</strong>。請先填寫您的匯款後五碼，送出訂單即可查看帳戶資訊進行轉帳！
+                  </p>
                 </div>
                 
                 <div>
@@ -689,6 +689,19 @@
       <p class="text-sm text-slate-600 mb-6 leading-relaxed font-light">
         感謝您的愛心支持！您的預購資料已安全寫入雲端系統，系統已自動為您保留庫存。<br>我們將會透過電話簡訊或 LINE 與您約定具體的自取/配送時間！
       </p>
+
+      <!-- Bank Details Box (Only shown if payment method is Transfer) -->
+      <div id="s-bank-details" class="hidden text-left text-sm bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6 space-y-2">
+        <h4 class="font-bold text-amber-950 flex items-center gap-1.5">🏦 請匯款至以下轉帳帳戶：</h4>
+        <div class="text-amber-900 space-y-1 mt-2 text-xs md:text-sm">
+          <p>【銀行代碼】<strong class="text-slate-900">007 第一銀行 金城分行</strong></p>
+          <p>【帳戶號碼】<strong class="text-slate-900 select-all">60750821518</strong> <span class="text-[10px] text-amber-700 bg-amber-100 px-1 py-0.5 rounded font-normal">長按可選取複製</span></p>
+          <p>【帳戶戶名】<strong class="text-slate-900">李宛青</strong></p>
+          <p class="text-[10px] text-amber-700 pt-1.5 font-light leading-relaxed">
+            ※ 請於下單後 24 小時內完成匯款，完成後我們會核對您填寫的帳號後五碼（<span id="s-last5-confirm" class="font-bold"></span>）。如有任何問題會與您聯繫！
+          </p>
+        </div>
+      </div>
 
       <!-- Optional Backup LINE link -->
       <div class="text-left text-xs text-slate-500 space-y-2 mb-6 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100">
@@ -1421,6 +1434,23 @@
       
       // Update inventory display
       recomputeStock();
+
+      // Check payment method to show/hide bank details in success modal
+      const paymentMethods = document.getElementsByName('payment-method');
+      let payment = "";
+      for (const rad of paymentMethods) {
+        if (rad.checked) { payment = rad.value; break; }
+      }
+
+      const sBankDetails = document.getElementById('s-bank-details');
+      const sLast5Confirm = document.getElementById('s-last5-confirm');
+
+      if (payment === "提前銀行轉帳") {
+        if (sBankDetails) sBankDetails.classList.remove('hidden');
+        if (sLast5Confirm) sLast5Confirm.textContent = bankLast5Input.value.trim();
+      } else {
+        if (sBankDetails) sBankDetails.classList.add('hidden');
+      }
 
       // Show success modal
       document.getElementById('successModal').classList.remove('hidden');
