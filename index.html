@@ -435,11 +435,17 @@
               <p id="qty-warning" class="hidden text-rose-600 text-sm mt-2 font-medium"></p>
               
               <!-- Dynamic Price Subtotal -->
-              <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between">
-                <span class="text-slate-600 text-sm font-medium">總金額小計</span>
-                <span class="text-slate-500 text-sm">
-                  NT$ <span id="subtotal-display" class="text-2xl font-black text-warmSun-600">650</span> 元
-                </span>
+              <div class="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                <div id="shipping-fee-row" class="hidden flex items-center justify-between text-xs text-slate-500 bg-amber-50/50 p-2 rounded-lg border border-amber-100/50">
+                  <span>運費小計 (每箱 $100)</span>
+                  <span class="font-semibold text-slate-700">NT$ <span id="shipping-fee-display">0</span> 元</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span id="subtotal-label" class="text-slate-600 text-sm font-medium">總金額小計</span>
+                  <span class="text-slate-500 text-sm">
+                    NT$ <span id="subtotal-display" class="text-2xl font-black text-warmSun-600">650</span> 元
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -634,6 +640,10 @@
         <div id="m-bank-row" class="hidden flex justify-between border-b border-slate-50 pb-2 bg-amber-50/50 p-2 rounded-lg">
           <span class="text-amber-800 font-medium">轉帳帳號後五碼</span>
           <span class="font-bold text-amber-900" id="m-last5"></span>
+        </div>
+        <div id="m-shipping-fee-row" class="hidden flex justify-between border-b border-slate-50 pb-2">
+          <span class="text-slate-400">運費小計</span>
+          <span class="font-bold text-orchard-600">NT$ <span id="m-shipping-fee">0</span> 元</span>
         </div>
         <div id="m-shipping-row" class="hidden flex flex-col border-b border-slate-50 pb-2 bg-orchard-50/50 p-2.5 rounded-lg text-sm">
           <span class="text-orchard-800 font-bold">📦 郵寄配送資訊</span>
@@ -1064,8 +1074,31 @@
     }
 
     function updateSubtotal() {
-      const subtotal = selectedQuantity * BOX_PRICE;
-      subtotalDisplay.textContent = subtotal.toLocaleString();
+      const pickupMethods = document.getElementsByName('pickup-method');
+      let pickup = "";
+      for (const rad of pickupMethods) {
+        if (rad.checked) { pickup = rad.value; break; }
+      }
+
+      const productCost = selectedQuantity * BOX_PRICE;
+      let shippingFee = 0;
+
+      const shippingFeeRow = document.getElementById('shipping-fee-row');
+      const shippingFeeDisplay = document.getElementById('shipping-fee-display');
+      const subtotalLabel = document.getElementById('subtotal-label');
+
+      if (pickup === "外縣市寄送") {
+        shippingFee = selectedQuantity * 100;
+        if (shippingFeeRow) shippingFeeRow.classList.remove('hidden');
+        if (shippingFeeDisplay) shippingFeeDisplay.textContent = shippingFee.toLocaleString();
+        if (subtotalLabel) subtotalLabel.textContent = "總金額小計 (含運費)";
+      } else {
+        if (shippingFeeRow) shippingFeeRow.classList.add('hidden');
+        if (subtotalLabel) subtotalLabel.textContent = "總金額小計";
+      }
+
+      const total = productCost + shippingFee;
+      subtotalDisplay.textContent = total.toLocaleString();
     }
 
     // 3 boxes minimum for local delivery (親送) validation
@@ -1221,7 +1254,11 @@
       }
 
       const remarks = document.getElementById('buyer-remarks').value.trim() || "無";
-      const totalAmount = qty * BOX_PRICE;
+      let shippingFee = 0;
+      if (pickup === "外縣市寄送") {
+        shippingFee = qty * 100;
+      }
+      const totalAmount = qty * BOX_PRICE + shippingFee;
 
       // Populate confirmation values
       document.getElementById('m-name').textContent = name;
@@ -1240,13 +1277,18 @@
       }
 
       // Handle mailing show/hide in modal
+      const mShippingFeeRow = document.getElementById('m-shipping-fee-row');
+      const mShippingFee = document.getElementById('m-shipping-fee');
       if (pickup === "外縣市寄送") {
         document.getElementById('m-shipping-row').classList.remove('hidden');
         document.getElementById('m-ship-name').textContent = shippingNameInput.value.trim();
         document.getElementById('m-ship-phone').textContent = shippingPhoneInput.value.trim();
         document.getElementById('m-ship-address').textContent = shippingAddressInput.value.trim();
+        if (mShippingFeeRow) mShippingFeeRow.classList.remove('hidden');
+        if (mShippingFee) mShippingFee.textContent = shippingFee.toLocaleString();
       } else {
         document.getElementById('m-shipping-row').classList.add('hidden');
+        if (mShippingFeeRow) mShippingFeeRow.classList.add('hidden');
       }
       
       document.getElementById('m-remarks').textContent = remarks;
@@ -1274,8 +1316,12 @@
       const phone = document.getElementById('m-phone').textContent;
       const line = document.getElementById('m-line').textContent;
       const qty = parseInt(orderQtyInput.value);
-      const totalAmount = qty * BOX_PRICE;
       const pickup = document.getElementById('m-pickup').textContent;
+      let shippingFee = 0;
+      if (pickup === "外縣市寄送") {
+        shippingFee = qty * 100;
+      }
+      const totalAmount = qty * BOX_PRICE + shippingFee;
       const times = document.getElementById('m-time').textContent;
       const payment = document.getElementById('m-payment').textContent;
       const last5 = document.getElementById('m-last5').textContent;
@@ -1524,11 +1570,15 @@
     // Render Order table with full data
     function renderAdminTable() {
       let totalSold = 0;
-      ordersList.forEach(order => totalSold += parseInt(order.quantity || 0));
+      let totalRevenue = 0;
+      ordersList.forEach(order => {
+        totalSold += parseInt(order.quantity || 0);
+        totalRevenue += parseFloat(order.total || 0);
+      });
       
       document.getElementById('stat-sold').textContent = totalSold;
       document.getElementById('stat-stock').textContent = DEFAULT_TOTAL_STOCK - totalSold;
-      document.getElementById('stat-money').textContent = (totalSold * BOX_PRICE).toLocaleString();
+      document.getElementById('stat-money').textContent = totalRevenue.toLocaleString();
       document.getElementById('stat-order-count').textContent = ordersList.length;
 
       const tbody = document.getElementById('admin-table-body');
